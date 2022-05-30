@@ -1,0 +1,19 @@
+
+/**
+ * @file
+ * Base stylesheet for the Service module.
+ */
+
+.service {
+  overflow: hidden;
+}
+.service .bar {
+  height: 1em;
+  margin: 1px 0;
+  background-color: #ddd;
+}
+.service .bar .foreground {
+  background-color: #000;
+  height: 1em;
+  float: left; /* LTR */
+}

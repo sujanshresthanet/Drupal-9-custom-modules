@@ -1,0 +1,10 @@
+
+/**
+ * @file
+ * Theme stylesheet for the FeaturedImage module.
+ */
+
+.featured_image dl,
+.featured_image dd {
+  margin: 0;
+}

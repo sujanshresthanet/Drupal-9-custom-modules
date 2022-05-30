@@ -1,0 +1,206 @@
+<?php
+
+/**
+ * @file
+ * Collects Aritcles on different topics in the form
+ */
+
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\blog\Entity\Blog;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Denotes that the blog is not published.
+ */
+const BLOG_NOT_PUBLISHED = 0;
+
+/**
+ * Denotes that the blog is published.
+ */
+const BLOG_PUBLISHED = 1;
+
+/**
+ * Implements hook_help().
+ */
+function blog_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.blog':
+    $output = '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('The Blog module can be used to create simple surveys or titlenaires that display cumulative results. A blog is a good way to receive feedback from site users and community members. For more information, see the online handbook entry for the <a href=":blog">Blog module</a>.', array(':blog' => 'https://www.drupal.org/docs/8/modules/blog')) . '</p>';
+    $output .= '<h3>' . t('Uses') . '</h3>';
+    $output .= '<dl>';
+    $output .= '<dt>' . t('Creating a blog') . '</dt>';
+    $output .= '<dd>' . t('Users can create a blog by clicking on <a href=":add-blog">Add a blog</a> on the <a href=":blogs">Blogs</a> page, and entering the title being posed, the answer choices, and beginning vote counts for each choice. The status (closed or active) and duration (length of time the blog remains active for new votes) can also be specified.', array(':add-blog' => Url::fromRoute('blog.blog_add')->toString(), ':blogs' => Url::fromRoute('blog.blog_list')->toString())) . '</dd>';
+    $output .= '<dt>' . t('Viewing blogs') . '</dt>';
+    $output .= '<dd>' . t('You can visit the <a href=":blogs">Blogs</a> page to view all current blogs, or alternately enable the <em>Most recent blog</em> block on the <a href=":blocks">Blocks administration page</a>. To vote in or view the results of a specific blog, you can click on the blog itself.', array(':blogs' => Url::fromRoute('blog.blog_list')->toString(), ':blocks' => Url::fromRoute('block.admin_display')->toString())) . '</dd>';
+    $output .= '</dl>';
+    return $output;
+  }
+}
+
+
+/**
+ *  Implements hook_page_attachments().
+ */
+function blog_page_attachments(array &$page) {
+  $page['#attached']['library'][] = 'blog/drupal.blog-links';
+}
+
+/**
+ * Implements hook_cron().
+ */
+function blog_cron() {
+
+}
+
+
+/**
+ * Implements template_preprocess_HOOK() for blog-results.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - raw_title: A string for the title of the blog.
+ *   - results: The results of the blog.
+ *   - block: A boolean to define if the blog is a block.
+ *   - nid: The node ID of the blog.
+ *   The raw_* inputs to this are naturally unsafe; often safe versions are
+ *   made to simply overwrite the raw version, but in this case it seems likely
+ *   that the title and the links may be overridden by the theme layer, so they
+ *   are left in with a different name for that purpose.
+ *
+ * @see blog-results.html.twig
+ */
+function template_preprocess_blog_results(&$variables) {
+  $variables['title'] = $variables['raw_title'];
+  $variables['results_title'] = t('Results');
+}
+
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function blog_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  switch ($form_id) {
+    case 'blog_form':
+    case 'blog_edit_form':
+    if ($form_state->getFormObject() instanceof \Drupal\Core\Entity\EntityFormInterface) {
+      $entity = $form_state->getFormObject()->getEntity();
+      $entity_type = $entity->bundle();
+      $related_blogs_values = $entity->related_blogs->value;
+      $related_blogs_values = explode(',', $related_blogs_values);
+      $tags_values = $entity->tags->value;
+      $tags_values = explode(',', $tags_values);
+    }
+
+    $query = \Drupal::entityQuery('blog');
+    $blog_ids = $query->execute();
+    $blog_list = array();
+
+    if(!empty($related_blogs_values)) {
+      foreach ($related_blogs_values as $key => $blog_id) {
+        $blog = Blog::load($blog_id);
+        if($blog) {
+          $blog_list[$blog_id] = $blog->title->value;
+        }
+      }
+    }
+
+    $autocomplete_search = Url::fromRoute('blog.autocomplete_search', [], ['absolute' => TRUE]);
+    $autocomplete_path = $autocomplete_search->toString();
+
+    $form['#attached']['drupalSettings']['autocomplete_path'] = $autocomplete_path;
+    $form['#attached']['drupalSettings']['entity_type'] = 'blog';
+    $form['#attached']['library'][] = 'blog/entity.multi_select_autocomlete';
+
+    $form['related_blogs']['widget'][0]['#type'] = 'select';
+    $form['related_blogs']['widget'][0]['#multiple'] = true;
+    $form['related_blogs']['widget'][0]['#validated'] = true;
+    $form['related_blogs']['widget'][0]['#required'] = false;
+    $form['related_blogs']['widget'][0]['#default_value'] = $related_blogs_values;
+    $form['related_blogs']['widget'][0]['#options'] = $blog_list;
+    $form['related_blogs']['widget'][0]['value']['#attributes']['class'][] = 'autocomplete-search';
+    $form['related_blogs']['widget'][0]['#attributes']['class'][] = 'autocomplete-search';
+
+
+    $tags_list = array(
+      '1' => 'one1',
+      '2' => 'two2',
+      '3' => 'three3',
+      '4' => 'four4',
+      '5' => 'five5',
+      '6' => 'six6',
+    );
+    $form['tags']['widget'][0]['#type'] = 'select';
+    $form['tags']['widget'][0]['#multiple'] = true;
+    $form['tags']['widget'][0]['#required'] = false;
+    $form['tags']['widget'][0]['#default_value'] = $tags_values;
+    $form['tags']['widget'][0]['#options'] = $tags_list;
+
+
+    array_unshift($form['actions']['submit']['#submit'], 'user_form_submitted');
+    break;
+
+    default:
+    break;
+  }
+
+}
+
+
+function user_form_submitted(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $related_blogs_value_data = '';
+  $related_blogs_value = $form_state->getValue('related_blogs');
+  if(isset($related_blogs_value[0]) && !empty($related_blogs_value[0])) {
+    $related_blogs_value_array = $related_blogs_value[0];
+    $related_blogs_value_keys = array_keys($related_blogs_value_array);
+    $related_blogs_value_data = implode(',', $related_blogs_value_keys);
+  }
+  $form_state->setValue('related_blogs', [['value' => $related_blogs_value_data]]);
+
+  $tags_value_data = '';
+  $tags_value = $form_state->getValue('tags');
+  if(isset($tags_value[0]) && !empty($tags_value[0])) {
+    $tags_value_array = $tags_value[0];
+    $tags_value_keys = array_keys($tags_value_array);
+    $tags_value_data = implode(',', $tags_value_keys);
+  }
+  $form_state->setValue('tags', [['value' => $tags_value_data]]);
+}
+
+function _my_auto_path($string) {
+  $string = array(':s' => $string . '%');
+
+  if ($string) {
+    $results = db_query("SELECT name FROM {users} WHERE name LIKE :s", $string);
+
+    $items = array();
+    foreach ($results as $result) {
+      $items[$result->name] = $result->name;
+    }
+    print drupal_json_encode($items);
+  }
+}
+
+
+function my_ajax_callback(&$form, &$form_state) {
+  if (user_load_by_name($form_state['values']['triggering_field_id'][LANGUAGE_NONE][0]['value']) != FALSE) {
+    $user_obj = user_load_by_name($form_state['values']['triggering_field_id'][LANGUAGE_NONE][0]['value']);
+    $user_id = $user_obj->uid;
+        // and another user attribute:
+    $user_whatever_userfield = $user_obj->whatever;
+
+    $form['dependant_field1'][LANGUAGE_NONE][0]['value']['#value'] = $user_id;
+    $form['dependant_field2'][LANGUAGE_NONE][0]['value']['#value'] = $user_whatever_userfield;
+
+    $commands = array();
+    $commands[] = ajax_command_replace("#dependant_field1_wrapper", render($form['dependant_field1']));
+    $commands[] = ajax_command_replace("#dependant_field2_wrapper", render($form['dependant_field2']));
+    return array('#type' => 'ajax', '#commands' => $commands);
+  }
+}

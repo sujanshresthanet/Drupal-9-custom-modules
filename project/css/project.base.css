@@ -1,0 +1,19 @@
+
+/**
+ * @file
+ * Base stylesheet for the Project module.
+ */
+
+.project {
+  overflow: hidden;
+}
+.project .bar {
+  height: 1em;
+  margin: 1px 0;
+  background-color: #ddd;
+}
+.project .bar .foreground {
+  background-color: #000;
+  height: 1em;
+  float: left; /* LTR */
+}

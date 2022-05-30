@@ -1,0 +1,10 @@
+drupal.featured_image-links:
+  version: VERSION
+  css:
+    component:
+      css/featured_image.base.css: {}
+      css/featured_image.theme.css: {}
+
+admin:
+  js:
+      js/featured_image.admin.js: {}

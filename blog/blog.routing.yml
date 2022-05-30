@@ -1,0 +1,59 @@
+blog.blog_list:
+  path: '/admin/content/blog'
+  defaults:
+    _entity_list: 'blog'
+    _title: 'Blogs'
+  requirements:
+    _permission: 'administer blogs'
+
+blog.blog_add:
+  path: '/blog/add'
+  defaults:
+    _entity_form: 'blog.default'
+    _title: 'Add blog'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_create_access: 'blog'
+
+entity.blog.edit_form:
+  path: '/admin/blog/{blog}/edit'
+  options:
+    _admin_route: TRUE
+  defaults:
+    _entity_form: 'blog.edit'
+  requirements:
+    _entity_access: 'blog.update'
+
+entity.blog.delete_form:
+  path: '/admin/blog/{blog}/delete'
+  defaults:
+    _entity_form: 'blog.delete'
+    _title: 'Delete form'
+  requirements:
+    _entity_access: 'blog.delete'
+
+entity.blog.canonical:
+  path: '/blog/{blog}'
+  defaults:
+    _entity_view: 'blog'
+    _title_callback: '\Drupal\blog\Controller\BlogController::blogTitle'
+  requirements:
+    _entity_access: 'blog.view'
+
+
+blog.settings:
+  path: '/admin/config/content/blog'
+  defaults:
+    _form: '\Drupal\blog\Form\BlogSettingsForm'
+    _title: 'Blog settings'
+  requirements:
+    _permission: 'administer blogs'
+
+blog.autocomplete_search:
+  path: '/get-data'
+  defaults:
+    _title: 'Get Data'
+    _controller: '\Drupal\blog\Controller\BlogController::get_data'
+  requirements:
+    _permission: 'administer'

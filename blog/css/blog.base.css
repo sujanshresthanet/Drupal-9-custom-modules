@@ -1,0 +1,19 @@
+
+/**
+ * @file
+ * Base stylesheet for the Blog module.
+ */
+
+.blog {
+  overflow: hidden;
+}
+.blog .bar {
+  height: 1em;
+  margin: 1px 0;
+  background-color: #ddd;
+}
+.blog .bar .foreground {
+  background-color: #000;
+  height: 1em;
+  float: left; /* LTR */
+}

@@ -1,0 +1,51 @@
+service.service_list:
+  path: '/admin/content/service'
+  defaults:
+    _entity_list: 'service'
+    _title: 'Services'
+  requirements:
+    _permission: 'administer services'
+
+service.service_add:
+  path: '/service/add'
+  defaults:
+    _entity_form: 'service.default'
+    _title: 'Add service'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_create_access: 'service'
+
+entity.service.edit_form:
+  path: '/admin/service/{service}/edit'
+  options:
+    _admin_route: TRUE
+  defaults:
+    _entity_form: 'service.edit'
+  requirements:
+    _entity_access: 'service.update'
+
+entity.service.delete_form:
+  path: '/admin/service/{service}/delete'
+  defaults:
+    _entity_form: 'service.delete'
+    _title: 'Delete form'
+  requirements:
+    _entity_access: 'service.delete'
+
+entity.service.canonical:
+  path: '/service/{service}'
+  defaults:
+    _entity_view: 'service'
+    _title_callback: '\Drupal\service\Controller\ServiceController::serviceTitle'
+  requirements:
+    _entity_access: 'service.view'
+
+
+service.settings:
+  path: '/admin/config/content/service'
+  defaults:
+    _form: '\Drupal\service\Form\ServiceSettingsForm'
+    _title: 'Service settings'
+  requirements:
+    _permission: 'administer services'

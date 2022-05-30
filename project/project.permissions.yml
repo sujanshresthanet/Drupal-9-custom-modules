@@ -1,0 +1,11 @@
+create projects:
+  title: 'Create projects'
+edit own projects:
+  title: 'Edit own projects'
+administer projects:
+  title: 'Administer projects'
+  restrict access: true
+access projects:
+  title: 'View projects'
+access project overview:
+  title: 'Access the Project overview page'

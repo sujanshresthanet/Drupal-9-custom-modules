@@ -1,0 +1,10 @@
+drupal.news_article-links:
+  version: VERSION
+  css:
+    component:
+      css/news_article.base.css: {}
+      css/news_article.theme.css: {}
+
+admin:
+  js:
+      js/news_article.admin.js: {}

@@ -1,0 +1,19 @@
+drupal.blog-links:
+  version: VERSION
+  css:
+    component:
+      css/blog.base.css: {}
+      css/blog.theme.css: {}
+
+admin:
+  js:
+      js/blog.admin.js: {}
+
+entity.multi_select_autocomlete:
+  version: VERSION
+  css:
+    base:
+      css/select2.min.css: {}
+  js:
+    js/select2.min.js: {}
+    js/multi-select-autocomlete.js: {}

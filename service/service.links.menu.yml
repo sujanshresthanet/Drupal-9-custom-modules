@@ -1,0 +1,10 @@
+service.service_list:
+  title: Services
+  route_name: service.service_list
+  parent: system.admin_content
+  description: 'List and edit services.'
+service.settings:
+  title: 'Service settings'
+  parent: system.admin_config_content
+  description: 'Configure services.'
+  route_name: service.settings

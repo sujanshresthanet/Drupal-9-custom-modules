@@ -1,0 +1,51 @@
+project.project_list:
+  path: '/admin/content/project'
+  defaults:
+    _entity_list: 'project'
+    _title: 'Projects'
+  requirements:
+    _permission: 'administer projects'
+
+project.project_add:
+  path: '/project/add'
+  defaults:
+    _entity_form: 'project.default'
+    _title: 'Add project'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_create_access: 'project'
+
+entity.project.edit_form:
+  path: '/admin/project/{project}/edit'
+  options:
+    _admin_route: TRUE
+  defaults:
+    _entity_form: 'project.edit'
+  requirements:
+    _entity_access: 'project.update'
+
+entity.project.delete_form:
+  path: '/admin/project/{project}/delete'
+  defaults:
+    _entity_form: 'project.delete'
+    _title: 'Delete form'
+  requirements:
+    _entity_access: 'project.delete'
+
+entity.project.canonical:
+  path: '/project/{project}'
+  defaults:
+    _entity_view: 'project'
+    _title_callback: '\Drupal\project\Controller\ProjectController::projectTitle'
+  requirements:
+    _entity_access: 'project.view'
+
+
+project.settings:
+  path: '/admin/config/content/project'
+  defaults:
+    _form: '\Drupal\project\Form\ProjectSettingsForm'
+    _title: 'Project settings'
+  requirements:
+    _permission: 'administer projects'

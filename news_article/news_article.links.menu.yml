@@ -1,0 +1,10 @@
+news_article.news_article_list:
+  title: News Articles
+  route_name: news_article.news_article_list
+  parent: system.admin_content
+  description: 'List and edit News and Articles.'
+news_article.settings:
+  title: 'News Article Settings'
+  parent: system.admin_config_content
+  description: 'Configure News and Articles.'
+  route_name: news_article.settings

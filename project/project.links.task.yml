@@ -1,0 +1,22 @@
+entity.project.canonical:
+  route_name: entity.project.canonical
+  base_route: entity.project.canonical
+  title: View
+entity.project.edit_form:
+  route_name: entity.project.edit_form
+  base_route: entity.project.canonical
+  title: Edit
+entity.project.delete_form:
+  route_name: entity.project.delete_form
+  base_route: entity.project.canonical
+  title: Delete
+  weight: 8
+project.project_overview:
+  route_name: project.project_list
+  base_route: system.admin_content
+  title: 'Projects'
+  description: 'Manage projects for your site.'
+project.settings:
+  route_name: project.settings
+  base_route: project.settings
+  title: Project settings

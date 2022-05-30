@@ -1,0 +1,11 @@
+create featured_images:
+  title: 'Create featured_images'
+edit own featured_images:
+  title: 'Edit own featured_images'
+administer featured_images:
+  title: 'Administer featured_images'
+  restrict access: true
+access featured_images:
+  title: 'View featured_images'
+access featured_image overview:
+  title: 'Access the Featured Image overview page'

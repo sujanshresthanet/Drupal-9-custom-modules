@@ -1,0 +1,5 @@
+service.service_add:
+  route_name: service.service_add
+  title: 'Add a service'
+  appears_on:
+    - 'service.service_list'

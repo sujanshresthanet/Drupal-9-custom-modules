@@ -1,0 +1,193 @@
+<?php
+
+/**
+ * @file
+ * Collects Aritcles on different topics in the form
+ */
+
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\news_article\Entity\NewsArticle;
+
+/**
+ * Denotes that the news_article is not published.
+ */
+const NEWSARTICLE_NOT_PUBLISHED = 0;
+
+/**
+ * Denotes that the news_article is published.
+ */
+const NEWSARTICLE_PUBLISHED = 1;
+
+/**
+ * Implements hook_help().
+ */
+function news_article_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.news_article':
+    $output = '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('The NewsArticle module can be used to create simple surveys or titlenaires that display cumulative results. A news_article is a good way to receive feedback from site users and community members. For more information, see the online handbook entry for the <a href=":news_article">NewsArticle module</a>.', array(':news_article' => 'https://www.drupal.org/docs/8/modules/news_article')) . '</p>';
+    $output .= '<h3>' . t('Uses') . '</h3>';
+    $output .= '<dl>';
+    $output .= '<dt>' . t('Creating a news_article') . '</dt>';
+    $output .= '<dd>' . t('Users can create a news_article by clicking on <a href=":add-news_article">Add a news_article</a> on the <a href=":news_articles">NewsArticles</a> page, and entering the title being posed, the answer choices, and beginning vote counts for each choice. The status (closed or active) and duration (length of time the news_article remains active for new votes) can also be specified.', array(':add-news_article' => Url::fromRoute('news_article.news_article_add')->toString(), ':news_articles' => Url::fromRoute('news_article.news_article_list')->toString())) . '</dd>';
+    $output .= '<dt>' . t('Viewing news_articles') . '</dt>';
+    $output .= '<dd>' . t('You can visit the <a href=":news_articles">NewsArticles</a> page to view all current news_articles, or alternately enable the <em>Most recent news_article</em> block on the <a href=":blocks">Blocks administration page</a>. To vote in or view the results of a specific news_article, you can click on the news_article itself.', array(':news_articles' => Url::fromRoute('news_article.news_article_list')->toString(), ':blocks' => Url::fromRoute('block.admin_display')->toString())) . '</dd>';
+    $output .= '</dl>';
+    return $output;
+  }
+}
+
+
+/**
+ *  Implements hook_page_attachments().
+ */
+function news_article_page_attachments(array &$page) {
+  $page['#attached']['library'][] = 'news_article/drupal.news_article-links';
+}
+
+/**
+ * Implements hook_cron().
+ */
+function news_article_cron() {
+
+}
+
+
+/**
+ * Implements template_preprocess_HOOK() for news_article-results.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - raw_title: A string for the title of the news_article.
+ *   - results: The results of the news_article.
+ *   - block: A boolean to define if the news_article is a block.
+ *   - nid: The node ID of the news_article.
+ *   The raw_* inputs to this are naturally unsafe; often safe versions are
+ *   made to simply overwrite the raw version, but in this case it seems likely
+ *   that the title and the links may be overridden by the theme layer, so they
+ *   are left in with a different name for that purpose.
+ *
+ * @see news_article-results.html.twig
+ */
+function template_preprocess_news_article_results(&$variables) {
+  $variables['title'] = $variables['raw_title'];
+  $variables['results_title'] = t('Results');
+}
+
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function news_article_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  switch ($form_id) {
+    case 'news_article_form':
+    case 'news_article_edit_form':
+    if ($form_state->getFormObject() instanceof \Drupal\Core\Entity\EntityFormInterface) {
+      $entity = $form_state->getFormObject()->getEntity();
+      $entity_type = $entity->bundle();
+      $related_news_articles_values = $entity->related_news_articles->value;
+      $related_news_articles_values = explode(',', $related_news_articles_values);
+      $tags_values = $entity->tags->value;
+      $tags_values = explode(',', $tags_values);
+    }
+
+    // $query = \Drupal::entityQuery('news_article');
+    // $news_article_ids = $query->execute();
+    // $news_article_list = array();
+
+    // if(!empty($news_article_ids)) {
+    //   foreach ($news_article_ids as $key => $news_article_id) {
+    //     $news_article = NewsArticle::load($news_article_id);
+    //     $news_article_list[$news_article_id] = $news_article->title->value;
+    //   }
+
+    // }
+
+    // $form['related_news_articles']['widget'][0]['#type'] = 'select';
+    // $form['related_news_articles']['widget'][0]['#multiple'] = true;
+    // $form['related_news_articles']['widget'][0]['#required'] = false;
+    // $form['related_news_articles']['widget'][0]['#default_value'] = $related_news_articles_values;
+    // $form['related_news_articles']['widget'][0]['#options'] = $news_article_list;
+
+
+
+    $query = \Drupal::entityQuery('news_article');
+    $news_article_ids = $query->execute();
+    $news_article_list = array();
+
+    if(!empty($related_news_articles_values)) {
+      foreach ($related_news_articles_values as $key => $news_article_id) {
+        $news_article = NewsArticle::load($news_article_id);
+        if($news_article) {
+          $news_article_list[$news_article_id] = $news_article->title->value;
+        }
+      }
+    }
+
+    $autocomplete_search = Url::fromRoute('blog.autocomplete_search', [], ['absolute' => TRUE]);
+    $autocomplete_path = $autocomplete_search->toString();
+
+    $form['#attached']['drupalSettings']['autocomplete_path'] = $autocomplete_path;
+    $form['#attached']['drupalSettings']['entity_type'] = 'news_article';
+    $form['#attached']['library'][] = 'blog/entity.multi_select_autocomlete';
+
+    $form['related_news_articles']['widget'][0]['#type'] = 'select';
+    $form['related_news_articles']['widget'][0]['#multiple'] = true;
+    $form['related_news_articles']['widget'][0]['#validated'] = true;
+    $form['related_news_articles']['widget'][0]['#required'] = false;
+    $form['related_news_articles']['widget'][0]['#default_value'] = $related_news_articles_values;
+    $form['related_news_articles']['widget'][0]['#options'] = $news_article_list;
+    $form['related_news_articles']['widget'][0]['value']['#attributes']['class'][] = 'autocomplete-search';
+    $form['related_news_articles']['widget'][0]['#attributes']['class'][] = 'autocomplete-search';
+
+
+    $tags_list = array(
+      '1' => 'one1',
+      '2' => 'two2',
+      '3' => 'three3',
+      '4' => 'four4',
+      '5' => 'five5',
+      '6' => 'six6',
+    );
+    $form['tags']['widget'][0]['#type'] = 'select';
+    $form['tags']['widget'][0]['#multiple'] = true;
+    $form['tags']['widget'][0]['#required'] = false;
+    $form['tags']['widget'][0]['#default_value'] = $tags_values;
+    $form['tags']['widget'][0]['#options'] = $tags_list;
+
+
+    array_unshift($form['actions']['submit']['#submit'], 'article_form_submitted');
+    break;
+
+    default:
+    break;
+  }
+
+}
+
+
+function article_form_submitted(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $related_news_articles_value_data = '';
+  $related_news_articles_value = $form_state->getValue('related_news_articles');
+  if(isset($related_news_articles_value[0]) && !empty($related_news_articles_value[0])) {
+    $related_news_articles_value_array = $related_news_articles_value[0];
+    $related_news_articles_value_keys = array_keys($related_news_articles_value_array);
+    $related_news_articles_value_data = implode(',', $related_news_articles_value_keys);
+  }
+  $form_state->setValue('related_news_articles', [['value' => $related_news_articles_value_data]]);
+
+  $tags_value_data = '';
+  $tags_value = $form_state->getValue('tags');
+  if(isset($tags_value[0]) && !empty($tags_value[0])) {
+    $tags_value_array = $tags_value[0];
+    $tags_value_keys = array_keys($tags_value_array);
+    $tags_value_data = implode(',', $tags_value_keys);
+  }
+  $form_state->setValue('tags', [['value' => $tags_value_data]]);
+}

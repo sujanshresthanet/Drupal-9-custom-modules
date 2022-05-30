@@ -1,0 +1,5 @@
+slider.slider_add:
+  route_name: slider.slider_add
+  title: 'Add a slider'
+  appears_on:
+    - 'slider.slider_list'

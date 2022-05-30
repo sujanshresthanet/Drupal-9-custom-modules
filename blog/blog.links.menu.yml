@@ -1,0 +1,10 @@
+blog.blog_list:
+  title: Blogs
+  route_name: blog.blog_list
+  parent: system.admin_content
+  description: 'List and edit blogs.'
+blog.settings:
+  title: 'Blog settings'
+  parent: system.admin_config_content
+  description: 'Configure blogs.'
+  route_name: blog.settings

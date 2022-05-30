@@ -1,0 +1,9 @@
+
+/**
+ * @file
+ * Right-to-left specfic theme stylesheet for the FeaturedImage module.
+ */
+
+.featured_image .percent {
+  text-align: left;
+}

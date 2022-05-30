@@ -1,0 +1,22 @@
+entity.service.canonical:
+  route_name: entity.service.canonical
+  base_route: entity.service.canonical
+  title: View
+entity.service.edit_form:
+  route_name: entity.service.edit_form
+  base_route: entity.service.canonical
+  title: Edit
+entity.service.delete_form:
+  route_name: entity.service.delete_form
+  base_route: entity.service.canonical
+  title: Delete
+  weight: 8
+service.service_overview:
+  route_name: service.service_list
+  base_route: system.admin_content
+  title: 'Services'
+  description: 'Manage services for your site.'
+service.settings:
+  route_name: service.settings
+  base_route: service.settings
+  title: Service settings

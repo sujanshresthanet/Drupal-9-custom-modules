@@ -1,0 +1,9 @@
+
+/**
+ * @file
+ * Right-to-left specfic theme stylesheet for the NewsArticle module.
+ */
+
+.news_article .percent {
+  text-align: left;
+}

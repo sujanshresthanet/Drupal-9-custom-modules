@@ -1,0 +1,16 @@
+name: News and Article
+type: module
+core_version_requirement: ^8.7.7 || ^9
+description: 'Allows user to add news_articles'
+package: Custom Modules
+configure: news_article.settings
+dependencies:
+  - featured_image
+  - drupal:field
+  - drupal:views
+  - drupal:user
+
+# Information added by Drupal.org packaging script on 2020-06-29
+version: '8.x-1.4'
+project: 'news_article'
+datestamp: 1593461865

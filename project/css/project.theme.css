@@ -1,0 +1,10 @@
+
+/**
+ * @file
+ * Theme stylesheet for the Project module.
+ */
+
+.project dl,
+.project dd {
+  margin: 0;
+}

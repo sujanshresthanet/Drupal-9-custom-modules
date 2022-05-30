@@ -1,0 +1,51 @@
+featured_image.featured_image_list:
+  path: '/admin/content/featured_image'
+  defaults:
+    _entity_list: 'featured_image'
+    _title: 'Featured Images'
+  requirements:
+    _permission: 'administer featured_images'
+
+featured_image.featured_image_add:
+  path: '/featured_image/add'
+  defaults:
+    _entity_form: 'featured_image.default'
+    _title: 'Add featured_image'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_create_access: 'featured_image'
+
+entity.featured_image.edit_form:
+  path: '/admin/featured_image/{featured_image}/edit'
+  options:
+    _admin_route: TRUE
+  defaults:
+    _entity_form: 'featured_image.edit'
+  requirements:
+    _entity_access: 'featured_image.update'
+
+entity.featured_image.delete_form:
+  path: '/admin/featured_image/{featured_image}/delete'
+  defaults:
+    _entity_form: 'featured_image.delete'
+    _title: 'Delete form'
+  requirements:
+    _entity_access: 'featured_image.delete'
+
+entity.featured_image.canonical:
+  path: '/featured_image/{featured_image}'
+  defaults:
+    _entity_view: 'featured_image'
+    _title_callback: '\Drupal\featured_image\Controller\FeaturedImageController::featured_imageTitle'
+  requirements:
+    _entity_access: 'featured_image.view'
+
+
+featured_image.settings:
+  path: '/admin/config/content/featured_image'
+  defaults:
+    _form: '\Drupal\featured_image\Form\FeaturedImageSettingsForm'
+    _title: 'Featured Image settings'
+  requirements:
+    _permission: 'administer featured_images'

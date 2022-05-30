@@ -1,0 +1,51 @@
+news_article.news_article_list:
+  path: '/admin/content/news_article'
+  defaults:
+    _entity_list: 'news_article'
+    _title: 'NewsArticles'
+  requirements:
+    _permission: 'administer news_articles'
+
+news_article.news_article_add:
+  path: '/news_article/add'
+  defaults:
+    _entity_form: 'news_article.default'
+    _title: 'Add news_article'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_create_access: 'news_article'
+
+entity.news_article.edit_form:
+  path: '/admin/news_article/{news_article}/edit'
+  options:
+    _admin_route: TRUE
+  defaults:
+    _entity_form: 'news_article.edit'
+  requirements:
+    _entity_access: 'news_article.update'
+
+entity.news_article.delete_form:
+  path: '/admin/news_article/{news_article}/delete'
+  defaults:
+    _entity_form: 'news_article.delete'
+    _title: 'Delete form'
+  requirements:
+    _entity_access: 'news_article.delete'
+
+entity.news_article.canonical:
+  path: '/news_article/{news_article}'
+  defaults:
+    _entity_view: 'news_article'
+    _title_callback: '\Drupal\news_article\Controller\NewsArticleController::news_articleTitle'
+  requirements:
+    _entity_access: 'news_article.view'
+
+
+news_article.settings:
+  path: '/admin/config/content/news_article'
+  defaults:
+    _form: '\Drupal\news_article\Form\NewsArticleSettingsForm'
+    _title: 'NewsArticle settings'
+  requirements:
+    _permission: 'administer news_articles'

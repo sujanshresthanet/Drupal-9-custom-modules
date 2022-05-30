@@ -1,0 +1,5 @@
+blog.blog_add:
+  route_name: blog.blog_add
+  title: 'Add a blog'
+  appears_on:
+    - 'blog.blog_list'

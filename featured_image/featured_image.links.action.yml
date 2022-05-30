@@ -1,0 +1,5 @@
+featured_image.featured_image_add:
+  route_name: featured_image.featured_image_add
+  title: 'Add a featured image'
+  appears_on:
+    - 'featured_image.featured_image_list'

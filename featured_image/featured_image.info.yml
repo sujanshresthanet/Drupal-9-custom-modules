@@ -1,0 +1,15 @@
+name: Featured Image
+type: module
+core_version_requirement: ^8.7.7 || ^9
+description: 'Allows user to add featured_images'
+package: Custom Modules
+configure: featured_image.settings
+dependencies:
+  - drupal:field
+  - drupal:views
+  - drupal:user
+
+# Information added by Drupal.org packaging script on 2020-06-29
+version: '8.x-1.4'
+project: 'featured_image'
+datestamp: 1593461865

@@ -1,0 +1,10 @@
+slider.slider_list:
+  title: Sliders
+  route_name: slider.slider_list
+  parent: system.admin_content
+  description: 'List and edit sliders.'
+slider.settings:
+  title: 'Slider settings'
+  parent: system.admin_config_content
+  description: 'Configure sliders.'
+  route_name: slider.settings

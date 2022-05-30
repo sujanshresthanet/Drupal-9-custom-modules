@@ -1,0 +1,16 @@
+name: Project
+type: module
+core_version_requirement: ^8.7.7 || ^9
+description: 'Allows user to add projects'
+package: Custom Modules
+configure: project.settings
+dependencies:
+  - featured_image
+  - drupal:field
+  - drupal:views
+  - drupal:user
+
+# Information added by Drupal.org packaging script on 2020-06-29
+version: '8.x-1.4'
+project: 'project'
+datestamp: 1593461865

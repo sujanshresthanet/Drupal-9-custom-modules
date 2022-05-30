@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - featured_image
+id: featured_image.teaser
+label: Teaser
+targetEntityType: featured_image
+cache: true

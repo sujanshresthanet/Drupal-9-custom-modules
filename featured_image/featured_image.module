@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Collects Aritcles on different topics in the form
+ */
+
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Denotes that the featured_image is not published.
+ */
+const FEATUREDIMAGE_NOT_PUBLISHED = 0;
+
+/**
+ * Denotes that the featured_image is published.
+ */
+const FEATUREDIMAGE_PUBLISHED = 1;
+
+/**
+ * Implements hook_help().
+ */
+function featured_image_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.featured_image':
+    $output = '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('The Featured Image module can be used to create simple surveys or titlenaires that display cumulative results. A featured_image is a good way to receive feedback from site users and community members. For more information, see the online handbook entry for the <a href=":featured_image">Featured Image module</a>.', array(':featured_image' => 'https://www.drupal.org/docs/8/modules/featured_image')) . '</p>';
+    $output .= '<h3>' . t('Uses') . '</h3>';
+    $output .= '<dl>';
+    $output .= '<dt>' . t('Creating a featured_image') . '</dt>';
+    $output .= '<dd>' . t('Users can create a featured_image by clicking on <a href=":add-featured_image">Add a featured_image</a> on the <a href=":featured_images">Featured Images</a> page, and entering the title being posed, the answer choices, and beginning vote counts for each choice. The status (closed or active) and duration (length of time the featured_image remains active for new votes) can also be specified.', array(':add-featured_image' => Url::fromRoute('featured_image.featured_image_add')->toString(), ':featured_images' => Url::fromRoute('featured_image.featured_image_list')->toString())) . '</dd>';
+    $output .= '<dt>' . t('Viewing featured_images') . '</dt>';
+    $output .= '<dd>' . t('You can visit the <a href=":featured_images">Featured Images</a> page to view all current featured_images, or alternately enable the <em>Most recent featured_image</em> block on the <a href=":blocks">Blocks administration page</a>. To vote in or view the results of a specific featured_image, you can click on the featured_image itself.', array(':featured_images' => Url::fromRoute('featured_image.featured_image_list')->toString(), ':blocks' => Url::fromRoute('block.admin_display')->toString())) . '</dd>';
+    $output .= '</dl>';
+    return $output;
+  }
+}
+
+
+/**
+ *  Implements hook_page_attachments().
+ */
+function featured_image_page_attachments(array &$page) {
+  $page['#attached']['library'][] = 'featured_image/drupal.featured_image-links';
+}
+
+/**
+ * Implements hook_cron().
+ */
+function featured_image_cron() {
+
+}
+
+
+/**
+ * Implements template_preprocess_HOOK() for featured_image-results.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - raw_title: A string for the title of the featured_image.
+ *   - results: The results of the featured_image.
+ *   - block: A boolean to define if the featured_image is a block.
+ *   - nid: The node ID of the featured_image.
+ *   The raw_* inputs to this are naturally unsafe; often safe versions are
+ *   made to simply overwrite the raw version, but in this case it seems likely
+ *   that the title and the links may be overridden by the theme layer, so they
+ *   are left in with a different name for that purpose.
+ *
+ * @see featured_image-results.html.twig
+ */
+function template_preprocess_featured_image_results(&$variables) {
+  $variables['title'] = $variables['raw_title'];
+  $variables['results_title'] = t('Results');
+}

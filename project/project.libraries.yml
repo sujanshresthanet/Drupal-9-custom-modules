@@ -1,0 +1,10 @@
+drupal.project-links:
+  version: VERSION
+  css:
+    component:
+      css/project.base.css: {}
+      css/project.theme.css: {}
+
+admin:
+  js:
+      js/project.admin.js: {}

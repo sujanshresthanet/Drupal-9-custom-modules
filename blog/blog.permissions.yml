@@ -1,0 +1,11 @@
+create blogs:
+  title: 'Create blogs'
+edit own blogs:
+  title: 'Edit own blogs'
+administer blogs:
+  title: 'Administer blogs'
+  restrict access: true
+access blogs:
+  title: 'View blogs'
+access blog overview:
+  title: 'Access the Blog overview page'

@@ -1,0 +1,10 @@
+drupal.slider-links:
+  version: VERSION
+  css:
+    component:
+      css/slider.base.css: {}
+      css/slider.theme.css: {}
+
+admin:
+  js:
+      js/slider.admin.js: {}

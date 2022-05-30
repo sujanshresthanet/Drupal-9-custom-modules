@@ -1,0 +1,9 @@
+
+/**
+ * @file
+ * Right-to-left specfic base stylesheet for the FeaturedImage module.
+ */
+
+.featured_image .bar .foreground {
+  float: right;
+}

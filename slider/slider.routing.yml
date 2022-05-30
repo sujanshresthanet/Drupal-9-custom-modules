@@ -1,0 +1,51 @@
+slider.slider_list:
+  path: '/admin/content/slider'
+  defaults:
+    _entity_list: 'slider'
+    _title: 'Sliders'
+  requirements:
+    _permission: 'administer sliders'
+
+slider.slider_add:
+  path: '/slider/add'
+  defaults:
+    _entity_form: 'slider.default'
+    _title: 'Add slider'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_create_access: 'slider'
+
+entity.slider.edit_form:
+  path: '/admin/slider/{slider}/edit'
+  options:
+    _admin_route: TRUE
+  defaults:
+    _entity_form: 'slider.edit'
+  requirements:
+    _entity_access: 'slider.update'
+
+entity.slider.delete_form:
+  path: '/admin/slider/{slider}/delete'
+  defaults:
+    _entity_form: 'slider.delete'
+    _title: 'Delete form'
+  requirements:
+    _entity_access: 'slider.delete'
+
+entity.slider.canonical:
+  path: '/slider/{slider}'
+  defaults:
+    _entity_view: 'slider'
+    _title_callback: '\Drupal\slider\Controller\SliderController::sliderTitle'
+  requirements:
+    _entity_access: 'slider.view'
+
+
+slider.settings:
+  path: '/admin/config/content/slider'
+  defaults:
+    _form: '\Drupal\slider\Form\SliderSettingsForm'
+    _title: 'Slider settings'
+  requirements:
+    _permission: 'administer sliders'

@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Collects Aritcles on different topics in the form
+ */
+
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Denotes that the slider is not published.
+ */
+const SLIDER_NOT_PUBLISHED = 0;
+
+/**
+ * Denotes that the slider is published.
+ */
+const SLIDER_PUBLISHED = 1;
+
+/**
+ * Implements hook_help().
+ */
+function slider_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.slider':
+    $output = '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('The Slider module can be used to create simple surveys or titlenaires that display cumulative results. A slider is a good way to receive feedback from site users and community members. For more information, see the online handbook entry for the <a href=":slider">Slider module</a>.', array(':slider' => 'https://www.drupal.org/docs/8/modules/slider')) . '</p>';
+    $output .= '<h3>' . t('Uses') . '</h3>';
+    $output .= '<dl>';
+    $output .= '<dt>' . t('Creating a slider') . '</dt>';
+    $output .= '<dd>' . t('Users can create a slider by clicking on <a href=":add-slider">Add a slider</a> on the <a href=":sliders">Sliders</a> page, and entering the title being posed, the answer choices, and beginning vote counts for each choice. The status (closed or active) and duration (length of time the slider remains active for new votes) can also be specified.', array(':add-slider' => Url::fromRoute('slider.slider_add')->toString(), ':sliders' => Url::fromRoute('slider.slider_list')->toString())) . '</dd>';
+    $output .= '<dt>' . t('Viewing sliders') . '</dt>';
+    $output .= '<dd>' . t('You can visit the <a href=":sliders">Sliders</a> page to view all current sliders, or alternately enable the <em>Most recent slider</em> block on the <a href=":blocks">Blocks administration page</a>. To vote in or view the results of a specific slider, you can click on the slider itself.', array(':sliders' => Url::fromRoute('slider.slider_list')->toString(), ':blocks' => Url::fromRoute('block.admin_display')->toString())) . '</dd>';
+    $output .= '</dl>';
+    return $output;
+  }
+}
+
+
+/**
+ *  Implements hook_page_attachments().
+ */
+function slider_page_attachments(array &$page) {
+  $page['#attached']['library'][] = 'slider/drupal.slider-links';
+}
+
+/**
+ * Implements hook_cron().
+ */
+function slider_cron() {
+
+}
+
+
+/**
+ * Implements template_preprocess_HOOK() for slider-results.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - raw_title: A string for the title of the slider.
+ *   - results: The results of the slider.
+ *   - block: A boolean to define if the slider is a block.
+ *   - nid: The node ID of the slider.
+ *   The raw_* inputs to this are naturally unsafe; often safe versions are
+ *   made to simply overwrite the raw version, but in this case it seems likely
+ *   that the title and the links may be overridden by the theme layer, so they
+ *   are left in with a different name for that purpose.
+ *
+ * @see slider-results.html.twig
+ */
+function template_preprocess_slider_results(&$variables) {
+  $variables['title'] = $variables['raw_title'];
+  $variables['results_title'] = t('Results');
+}

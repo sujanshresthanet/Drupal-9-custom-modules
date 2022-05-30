@@ -1,0 +1,10 @@
+drupal.service-links:
+  version: VERSION
+  css:
+    component:
+      css/service.base.css: {}
+      css/service.theme.css: {}
+
+admin:
+  js:
+      js/service.admin.js: {}

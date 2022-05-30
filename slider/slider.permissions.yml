@@ -1,0 +1,11 @@
+create sliders:
+  title: 'Create sliders'
+edit own sliders:
+  title: 'Edit own sliders'
+administer sliders:
+  title: 'Administer sliders'
+  restrict access: true
+access sliders:
+  title: 'View sliders'
+access slider overview:
+  title: 'Access the Slider overview page'

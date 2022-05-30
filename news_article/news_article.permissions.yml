@@ -1,0 +1,11 @@
+create news_articles:
+  title: 'Create News and Articles'
+edit own news_articles:
+  title: 'Edit own News and Articles'
+administer news_articles:
+  title: 'Administer News Articles'
+  restrict access: true
+access news_articles:
+  title: 'View News and Articles'
+access news_article overview:
+  title: 'Access the News Article overview page'

@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - blog
+id: blog.teaser
+label: Teaser
+targetEntityType: blog
+cache: true

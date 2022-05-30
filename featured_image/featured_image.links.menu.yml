@@ -1,0 +1,10 @@
+featured_image.featured_image_list:
+  title: Featured Images
+  route_name: featured_image.featured_image_list
+  parent: system.admin_content
+  description: 'List and edit featured images.'
+featured_image.settings:
+  title: 'Featured Image settings'
+  parent: system.admin_config_content
+  description: 'Configure featured images.'
+  route_name: featured_image.settings

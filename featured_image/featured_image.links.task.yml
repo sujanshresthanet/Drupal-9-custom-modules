@@ -1,0 +1,22 @@
+entity.featured_image.canonical:
+  route_name: entity.featured_image.canonical
+  base_route: entity.featured_image.canonical
+  title: View
+entity.featured_image.edit_form:
+  route_name: entity.featured_image.edit_form
+  base_route: entity.featured_image.canonical
+  title: Edit
+entity.featured_image.delete_form:
+  route_name: entity.featured_image.delete_form
+  base_route: entity.featured_image.canonical
+  title: Delete
+  weight: 8
+featured_image.featured_image_overview:
+  route_name: featured_image.featured_image_list
+  base_route: system.admin_content
+  title: 'FeaturedImages'
+  description: 'Manage featured_images for your site.'
+featured_image.settings:
+  route_name: featured_image.settings
+  base_route: featured_image.settings
+  title: FeaturedImage settings

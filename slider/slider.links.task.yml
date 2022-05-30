@@ -1,0 +1,22 @@
+entity.slider.canonical:
+  route_name: entity.slider.canonical
+  base_route: entity.slider.canonical
+  title: View
+entity.slider.edit_form:
+  route_name: entity.slider.edit_form
+  base_route: entity.slider.canonical
+  title: Edit
+entity.slider.delete_form:
+  route_name: entity.slider.delete_form
+  base_route: entity.slider.canonical
+  title: Delete
+  weight: 8
+slider.slider_overview:
+  route_name: slider.slider_list
+  base_route: system.admin_content
+  title: 'Sliders'
+  description: 'Manage sliders for your site.'
+slider.settings:
+  route_name: slider.settings
+  base_route: slider.settings
+  title: Slider settings

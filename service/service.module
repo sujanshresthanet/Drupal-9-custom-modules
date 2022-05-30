@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Collects Aritcles on different topics in the form
+ */
+
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Denotes that the service is not published.
+ */
+const SERVICE_NOT_PUBLISHED = 0;
+
+/**
+ * Denotes that the service is published.
+ */
+const SERVICE_PUBLISHED = 1;
+
+/**
+ * Implements hook_help().
+ */
+function service_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.service':
+    $output = '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('The Service module can be used to create simple surveys or titlenaires that display cumulative results. A service is a good way to receive feedback from site users and community members. For more information, see the online handbook entry for the <a href=":service">Service module</a>.', array(':service' => 'https://www.drupal.org/docs/8/modules/service')) . '</p>';
+    $output .= '<h3>' . t('Uses') . '</h3>';
+    $output .= '<dl>';
+    $output .= '<dt>' . t('Creating a service') . '</dt>';
+    $output .= '<dd>' . t('Users can create a service by clicking on <a href=":add-service">Add a service</a> on the <a href=":services">Services</a> page, and entering the title being posed, the answer choices, and beginning vote counts for each choice. The status (closed or active) and duration (length of time the service remains active for new votes) can also be specified.', array(':add-service' => Url::fromRoute('service.service_add')->toString(), ':services' => Url::fromRoute('service.service_list')->toString())) . '</dd>';
+    $output .= '<dt>' . t('Viewing services') . '</dt>';
+    $output .= '<dd>' . t('You can visit the <a href=":services">Services</a> page to view all current services, or alternately enable the <em>Most recent service</em> block on the <a href=":blocks">Blocks administration page</a>. To vote in or view the results of a specific service, you can click on the service itself.', array(':services' => Url::fromRoute('service.service_list')->toString(), ':blocks' => Url::fromRoute('block.admin_display')->toString())) . '</dd>';
+    $output .= '</dl>';
+    return $output;
+  }
+}
+
+
+/**
+ *  Implements hook_page_attachments().
+ */
+function service_page_attachments(array &$page) {
+  $page['#attached']['library'][] = 'service/drupal.service-links';
+}
+
+/**
+ * Implements hook_cron().
+ */
+function service_cron() {
+
+}
+
+
+/**
+ * Implements template_preprocess_HOOK() for service-results.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - raw_title: A string for the title of the service.
+ *   - results: The results of the service.
+ *   - block: A boolean to define if the service is a block.
+ *   - nid: The node ID of the service.
+ *   The raw_* inputs to this are naturally unsafe; often safe versions are
+ *   made to simply overwrite the raw version, but in this case it seems likely
+ *   that the title and the links may be overridden by the theme layer, so they
+ *   are left in with a different name for that purpose.
+ *
+ * @see service-results.html.twig
+ */
+function template_preprocess_service_results(&$variables) {
+  $variables['title'] = $variables['raw_title'];
+  $variables['results_title'] = t('Results');
+}

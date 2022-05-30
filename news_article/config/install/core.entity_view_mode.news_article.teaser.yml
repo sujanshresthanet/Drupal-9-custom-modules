@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - news_article
+id: news_article.teaser
+label: Teaser
+targetEntityType: news_article
+cache: true

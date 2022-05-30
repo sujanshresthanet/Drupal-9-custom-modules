@@ -1,0 +1,196 @@
+<?php
+
+/**
+ * @file
+ * Collects Aritcles on different topics in the form
+ */
+
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\project\Entity\Project;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Denotes that the project is not published.
+ */
+const PROJECT_NOT_PUBLISHED = 0;
+
+/**
+ * Denotes that the project is published.
+ */
+const PROJECT_PUBLISHED = 1;
+
+/**
+ * Implements hook_help().
+ */
+function project_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.project':
+    $output = '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('The Project module can be used to create simple surveys or titlenaires that display cumulative results. A project is a good way to receive feedback from site users and community members. For more information, see the online handbook entry for the <a href=":project">Project module</a>.', array(':project' => 'https://www.drupal.org/docs/8/modules/project')) . '</p>';
+    $output .= '<h3>' . t('Uses') . '</h3>';
+    $output .= '<dl>';
+    $output .= '<dt>' . t('Creating a project') . '</dt>';
+    $output .= '<dd>' . t('Users can create a project by clicking on <a href=":add-project">Add a project</a> on the <a href=":projects">Projects</a> page, and entering the title being posed, the answer choices, and beginning vote counts for each choice. The status (closed or active) and duration (length of time the project remains active for new votes) can also be specified.', array(':add-project' => Url::fromRoute('project.project_add')->toString(), ':projects' => Url::fromRoute('project.project_list')->toString())) . '</dd>';
+    $output .= '<dt>' . t('Viewing projects') . '</dt>';
+    $output .= '<dd>' . t('You can visit the <a href=":projects">Projects</a> page to view all current projects, or alternately enable the <em>Most recent project</em> block on the <a href=":blocks">Blocks administration page</a>. To vote in or view the results of a specific project, you can click on the project itself.', array(':projects' => Url::fromRoute('project.project_list')->toString(), ':blocks' => Url::fromRoute('block.admin_display')->toString())) . '</dd>';
+    $output .= '</dl>';
+    return $output;
+  }
+}
+
+
+/**
+ *  Implements hook_page_attachments().
+ */
+function project_page_attachments(array &$page) {
+  $page['#attached']['library'][] = 'project/drupal.project-links';
+}
+
+/**
+ * Implements hook_cron().
+ */
+function project_cron() {
+
+}
+
+
+/**
+ * Implements template_preprocess_HOOK() for project-results.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - raw_title: A string for the title of the project.
+ *   - results: The results of the project.
+ *   - block: A boolean to define if the project is a block.
+ *   - nid: The node ID of the project.
+ *   The raw_* inputs to this are naturally unsafe; often safe versions are
+ *   made to simply overwrite the raw version, but in this case it seems likely
+ *   that the title and the links may be overridden by the theme layer, so they
+ *   are left in with a different name for that purpose.
+ *
+ * @see project-results.html.twig
+ */
+function template_preprocess_project_results(&$variables) {
+  $variables['title'] = $variables['raw_title'];
+  $variables['results_title'] = t('Results');
+}
+
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function project_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  switch ($form_id) {
+    case 'project_form':
+    case 'project_edit_form':
+    if ($form_state->getFormObject() instanceof \Drupal\Core\Entity\EntityFormInterface) {
+      $entity = $form_state->getFormObject()->getEntity();
+      $entity_type = $entity->bundle();
+      $related_projects_values = $entity->related_projects->value;
+      $related_projects_values = explode(',', $related_projects_values);
+      $tags_values = $entity->tags->value;
+      $tags_values = explode(',', $tags_values);
+    }
+
+    // $query = \Drupal::entityQuery('project');
+    // $project_ids = $query->execute();
+    // $project_list = array();
+
+    // if(!empty($project_ids)) {
+    //   foreach ($project_ids as $key => $project_id) {
+    //     $project = Project::load($project_id);
+    //     $project_list[$project_id] = $project->title->value;
+    //   }
+
+    // }
+
+    // $form['related_projects']['widget'][0]['#type'] = 'select';
+    // $form['related_projects']['widget'][0]['#multiple'] = true;
+    // $form['related_projects']['widget'][0]['#required'] = false;
+    // $form['related_projects']['widget'][0]['#default_value'] = $related_projects_values;
+    // $form['related_projects']['widget'][0]['#options'] = $project_list;
+
+
+
+
+
+
+    $query = \Drupal::entityQuery('project');
+    $project_ids = $query->execute();
+    $project_list = array();
+
+    if(!empty($related_projects_values)) {
+      foreach ($related_projects_values as $key => $project_id) {
+        $project = Project::load($project_id);
+        if($project) {
+          $project_list[$project_id] = $project->title->value;
+        }
+      }
+    }
+
+    $autocomplete_search = Url::fromRoute('blog.autocomplete_search', [], ['absolute' => TRUE]);
+    $autocomplete_path = $autocomplete_search->toString();
+
+    $form['#attached']['drupalSettings']['autocomplete_path'] = $autocomplete_path;
+    $form['#attached']['drupalSettings']['entity_type'] = 'project';
+    $form['#attached']['library'][] = 'blog/entity.multi_select_autocomlete';
+
+    $form['related_projects']['widget'][0]['#type'] = 'select';
+    $form['related_projects']['widget'][0]['#multiple'] = true;
+    $form['related_projects']['widget'][0]['#validated'] = true;
+    $form['related_projects']['widget'][0]['#required'] = false;
+    $form['related_projects']['widget'][0]['#default_value'] = $related_projects_values;
+    $form['related_projects']['widget'][0]['#options'] = $project_list;
+    $form['related_projects']['widget'][0]['#attributes']['class'][] = 'autocomplete-search';
+
+
+    $tags_list = array(
+      '1' => 'one1',
+      '2' => 'two2',
+      '3' => 'three3',
+      '4' => 'four4',
+      '5' => 'five5',
+      '6' => 'six6',
+    );
+    $form['tags']['widget'][0]['#type'] = 'select';
+    $form['tags']['widget'][0]['#multiple'] = true;
+    $form['tags']['widget'][0]['#required'] = false;
+    $form['tags']['widget'][0]['#default_value'] = $tags_values;
+    $form['tags']['widget'][0]['#options'] = $tags_list;
+
+
+    array_unshift($form['actions']['submit']['#submit'], 'project_form_submitted');
+    break;
+
+    default:
+    break;
+  }
+
+}
+
+
+function project_form_submitted(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $related_projects_value_data = '';
+  $related_projects_value = $form_state->getValue('related_projects');
+  if(isset($related_projects_value[0]) && !empty($related_projects_value[0])) {
+    $related_projects_value_array = $related_projects_value[0];
+    $related_projects_value_keys = array_keys($related_projects_value_array);
+    $related_projects_value_data = implode(',', $related_projects_value_keys);
+  }
+  $form_state->setValue('related_projects', [['value' => $related_projects_value_data]]);
+
+  $tags_value_data = '';
+  $tags_value = $form_state->getValue('tags');
+  if(isset($tags_value[0]) && !empty($tags_value[0])) {
+    $tags_value_array = $tags_value[0];
+    $tags_value_keys = array_keys($tags_value_array);
+    $tags_value_data = implode(',', $tags_value_keys);
+  }
+  $form_state->setValue('tags', [['value' => $tags_value_data]]);
+}

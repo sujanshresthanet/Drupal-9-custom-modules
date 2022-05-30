@@ -1,0 +1,19 @@
+
+/**
+ * @file
+ * Base stylesheet for the NewsArticle module.
+ */
+
+.news_article {
+  overflow: hidden;
+}
+.news_article .bar {
+  height: 1em;
+  margin: 1px 0;
+  background-color: #ddd;
+}
+.news_article .bar .foreground {
+  background-color: #000;
+  height: 1em;
+  float: left; /* LTR */
+}

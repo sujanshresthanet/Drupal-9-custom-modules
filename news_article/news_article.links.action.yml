@@ -1,0 +1,5 @@
+news_article.news_article_add:
+  route_name: news_article.news_article_add
+  title: 'Add a News & Article'
+  appears_on:
+    - 'news_article.news_article_list'

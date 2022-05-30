@@ -1,0 +1,11 @@
+create services:
+  title: 'Create services'
+edit own services:
+  title: 'Edit own services'
+administer services:
+  title: 'Administer services'
+  restrict access: true
+access services:
+  title: 'View services'
+access service overview:
+  title: 'Access the Service overview page'

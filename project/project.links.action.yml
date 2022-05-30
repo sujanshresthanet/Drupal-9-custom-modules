@@ -1,0 +1,5 @@
+project.project_add:
+  route_name: project.project_add
+  title: 'Add a project'
+  appears_on:
+    - 'project.project_list'

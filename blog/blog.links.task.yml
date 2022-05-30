@@ -1,0 +1,22 @@
+entity.blog.canonical:
+  route_name: entity.blog.canonical
+  base_route: entity.blog.canonical
+  title: View
+entity.blog.edit_form:
+  route_name: entity.blog.edit_form
+  base_route: entity.blog.canonical
+  title: Edit
+entity.blog.delete_form:
+  route_name: entity.blog.delete_form
+  base_route: entity.blog.canonical
+  title: Delete
+  weight: 8
+blog.blog_overview:
+  route_name: blog.blog_list
+  base_route: system.admin_content
+  title: 'Blogs'
+  description: 'Manage blogs for your site.'
+blog.settings:
+  route_name: blog.settings
+  base_route: blog.settings
+  title: Blog settings

@@ -1,0 +1,10 @@
+
+/**
+ * @file
+ * Theme stylesheet for the Slider module.
+ */
+
+.slider dl,
+.slider dd {
+  margin: 0;
+}

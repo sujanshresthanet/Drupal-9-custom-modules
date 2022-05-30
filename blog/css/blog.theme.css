@@ -1,0 +1,10 @@
+
+/**
+ * @file
+ * Theme stylesheet for the Blog module.
+ */
+
+.blog dl,
+.blog dd {
+  margin: 0;
+}

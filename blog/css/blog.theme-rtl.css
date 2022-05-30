@@ -1,0 +1,9 @@
+
+/**
+ * @file
+ * Right-to-left specfic theme stylesheet for the Blog module.
+ */
+
+.blog .percent {
+  text-align: left;
+}

@@ -1,0 +1,10 @@
+
+/**
+ * @file
+ * Theme stylesheet for the NewsArticle module.
+ */
+
+.news_article dl,
+.news_article dd {
+  margin: 0;
+}

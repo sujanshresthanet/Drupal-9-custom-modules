@@ -1,0 +1,10 @@
+
+/**
+ * @file
+ * Theme stylesheet for the Service module.
+ */
+
+.service dl,
+.service dd {
+  margin: 0;
+}

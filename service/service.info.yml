@@ -1,0 +1,16 @@
+name: Service
+type: module
+core_version_requirement: ^8.7.7 || ^9
+description: 'Allows user to add services'
+package: Custom Modules
+configure: service.settings
+dependencies:
+  - featured_image
+  - drupal:field
+  - drupal:views
+  - drupal:user
+
+# Information added by Drupal.org packaging script on 2020-06-29
+version: '8.x-1.4'
+project: 'service'
+datestamp: 1593461865
